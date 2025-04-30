@@ -1,37 +1,24 @@
+
 import React, { useState } from "react";
-import { useEffect } from "react";
-import Header from "./Header";
-import PlantPage from "./PlantPage";
-import NewPlantForm from "./NewPlantForm";
+import PlantList from "./PlantList";
 import Search from "./Search";
+import NewPlantForm from "./NewPlantForm";
 
 function App() {
-  const [plants, setPlants] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [plants, setPlants] = useState([]); 
+  const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    fetch("http://localhost:6001/plants")
-      .then((r) => r.json())
-      .then((data) => {
-        console.log("Fetched plants:", data);
-        setPlants(data);
-      });
-  }, []);
 
-  const handleAddPlant = (newPlant) => {
-    setPlants([...plants, newPlant]);
-  };
-
-  const filteredPlants = plants.filter((plant) =>
-    plant.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  function handleAddPlant(newPlant) {
+    setPlants((prevPlants) => [...prevPlants, newPlant]);
+  }
 
   return (
     <div className="app">
-      <Header />
+      <h1>Plantsy</h1>
       <NewPlantForm onAddPlant={handleAddPlant} />
-      <Search onSearch={setSearchTerm} />
-      <PlantPage plants={filteredPlants} />
+      <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <PlantList plants={plants} setPlants={setPlants} searchQuery={searchQuery} />
     </div>
   );
 }
